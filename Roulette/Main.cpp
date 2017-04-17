@@ -47,13 +47,18 @@ public:
 		money = money + res;  //к деньгам добавл€етс€ res
 	}
 	void show() {
+		cout << endl;
+		cout << "------------------" << endl;
 		cout << "Stavka:" << getRate() << " Chislo:" << getNumber() << endl; //выводит: ставка, число
 		cout << "Vipalo:" << spin() << endl; //выводит: генератор случайных чисел
 		cout << "Dengi:" << money << endl; //выводит: деньги
+		cout << "------------------" << endl;
+		cout << endl;
+		system("pause");
 	}
 };
 
-class Money : Roulette { //класс Money наследник класса Roulette
+class Money { //класс Money дл€ рандомизации денег в начале игры и их вывода
 public:
 	Money(); //конструктор
 	Money(int Money) { //конструктор с одним параметром («ачем? Ќе знаю)
@@ -72,29 +77,22 @@ public:
 
 int main() {
 	Money mon(0); //вызов конструктора класса Money с параметром (Ќе важно какой, но если конструктор без параметра, то getMoney начинает не работать)
-	cout << "Vashi dengi: " << money << endl;
+	cout << "Vashi dengi: " << mon.getMoney() << endl;
 	int a, b; //переменные дл€ ставки и числа
-loop:
-	cout << "Vvedite stavku: " << endl;
-	cin >> a; //ввод ставки
-	if (a > mon.getMoney()) {
-		cout << "Vi ne mozhete sdelat stavku!" << endl;
-		goto loop;
-	}
-	else {
-		cout << "Vvedite chislo: " << endl;
-		cin >> b; //ввод числа
-		Roulette roul(a, b);//вызов конструктора класса Roulette с параметрами
-		if (mon.getMoney() <= 0) { //если возврат функции getMoney <= 0 то
+	while (true) {
+		if (mon.getMoney() <= 0) { //если деньги меньше или равны 0 то
 			cout << "Igra zakonchena!" << endl; //прекратить игру
-			return 0;
+			return 0; //не знаю как ещЄ выйти, break разве что, но тогда в конец программы оп€ть return 0 нужен
 		}
-		else { //если иначе то
+		else {
+			cout << "Vvedite stavku: " << endl;
+			cin >> a; //ввод ставки
+			cout << "Vvedite chislo: " << endl;
+			cin >> b; //ввод числа
+			Roulette roul(a, b);//вызов конструктора класса Roulette с параметрами
 			roul.game(); //продолжить игру
 			roul.show(); //вывести значени€ на экран
+			system("CLS");
 		}
-		system("pause");
-		goto loop; //когда лень писать switch или while
-		system("pause");
 	}
 }

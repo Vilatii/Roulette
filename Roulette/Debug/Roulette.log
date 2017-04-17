@@ -1,5 +1,5 @@
 ﻿  Main.cpp
 c:\users\vitalii\desktop\курсач\roulette\main.cpp(39): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-c:\users\vitalii\desktop\курсач\roulette\main.cpp(63): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+c:\users\vitalii\desktop\курсач\roulette\main.cpp(68): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
   Roulette.vcxproj -> C:\Users\Vitalii\Desktop\Курсач\Debug\Roulette.exe
   Roulette.vcxproj -> C:\Users\Vitalii\Desktop\Курсач\Debug\Roulette.pdb (Partial PDB)
