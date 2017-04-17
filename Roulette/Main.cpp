@@ -81,7 +81,8 @@ int main() {
 	int a, b; //переменные для ставки и числа
 	while (true) {
 		if (mon.getMoney() <= 0) { //если деньги меньше или равны 0 то
-			cout << "Igra zakonchena!" << endl; //прекратить игру
+			cout << "Igra zakonchena!\n" << endl; //прекратить игру
+			system("pause");
 			return 0; //не знаю как ещё выйти, break разве что, но тогда в конец программы опять return 0 нужен
 		}
 		else {
