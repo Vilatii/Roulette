@@ -1,0 +1,100 @@
+#include <iostream>
+#include <math.h>
+#include <windows.h>
+#include <conio.h>
+#include <ctime>
+
+using namespace std;
+int money = 0; //глобальна€ переменна€ money, если запихнуть в любой класс, то пойдут кракоз€бры, а оно нам не надо
+
+class Roulette { //класс Roulette (главный класс, поидее)
+private:
+	int rate; //ставка
+	int number; //число
+	int res; //запись результата
+public:
+	Roulette() {
+	}; //конструктор
+	Roulette(int Rate, int Number) { // конструктор  с параметрами
+		setRate(Rate); // устанавливаем ставку
+		setNumber(Number); //устанавливаем число
+	}
+	void setRate(int Rate) { //функци€ установки ставки
+		rate = Rate;
+	}
+	void setNumber(int Number) { //функци€ установки числа
+		number = Number;
+	}
+	int getRate() { //функци€ возврата ставки
+		return rate;
+	}
+	int getNumber() { //функци€ возврата числа
+		return number;
+	}
+	int spin() { //генератор случайных чисел
+		int i = rand() % 36; //диапазон генератора от 0 до 36 включительно
+		return i; //статическое значение 15 дл€ проверки
+	}
+	void game() {
+		srand(time(NULL));
+		money = money - rate; //отнимаем от денег нашу ставку
+		if (spin() == number) { //если генератор = нашему числу, то
+			res = rate*number; //ставка умножаетс€ на число и записываетс€ в res
+		}
+		else {
+			res = 0; //если наоборот, то res = 0
+		}
+		money = money + res;  //к деньгам добавл€етс€ res
+	}
+	void show() {
+		cout << "Stavka:" << getRate() << " Chislo:" << getNumber() << endl; //выводит: ставка, число
+		cout << "Vipalo:" << spin() << endl; //выводит: генератор случайных чисел
+		cout << "Dengi:" << money << endl; //выводит: деньги
+	}
+};
+
+class Money : Roulette { //класс Money наследник класса Roulette
+public:
+	Money(); //конструктор
+	Money(int Money) { //конструктор с одним параметром («ачем? Ќе знаю)
+		setMoney(Money); //устанавливаем деньги («ачем ввожу число тоже не знаю)
+	}
+	void setMoney(int Money) { //функци€ установки денег
+		srand(time(NULL));
+		Money = rand() % 200 +50; //генератор случайных чисел в диапазоне от 50 до 200 включительно
+		money = Money; //в переменную money (котора€ находитс€ в protected класса Roulette) записываем значение генератора
+	}
+	int getMoney() { //функци€ возврата денег
+		return money;
+	}
+};
+
+
+int main() {
+	Money mon(0); //вызов конструктора класса Money с параметром (Ќе важно какой, но если конструктор без параметра, то getMoney начинает не работать)
+	cout << "Vashi dengi: " << money << endl;
+	int a, b; //переменные дл€ ставки и числа
+loop:
+	cout << "Vvedite stavku: " << endl;
+	cin >> a; //ввод ставки
+	if (a > mon.getMoney()) {
+		cout << "Vi ne mozhete sdelat stavku!" << endl;
+		goto loop;
+	}
+	else {
+		cout << "Vvedite chislo: " << endl;
+		cin >> b; //ввод числа
+		Roulette roul(a, b);//вызов конструктора класса Roulette с параметрами
+		if (mon.getMoney() <= 0) { //если возврат функции getMoney <= 0 то
+			cout << "Igra zakonchena!" << endl; //прекратить игру
+			return 0;
+		}
+		else { //если иначе то
+			roul.game(); //продолжить игру
+			roul.show(); //вывести значени€ на экран
+		}
+		system("pause");
+		goto loop; //когда лень писать switch или while
+		system("pause");
+	}
+}
