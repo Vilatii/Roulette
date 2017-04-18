@@ -5,7 +5,27 @@
 #include <ctime>
 
 using namespace std;
-int money = 0; //глобальная переменная money, если запихнуть в любой класс, то пойдут кракозябры, а оно нам не надо
+class Money { //класс Money для рандомизации денег в начале игры и их вывода
+	int money;
+public:
+	Money(); //конструктор
+	Money(int Money) { //конструктор с одним параметром (Зачем? Не знаю)
+		money = 0;
+		setRandMoney(); //устанавливаем деньги (Зачем ввожу число тоже не знаю)
+	}
+	void setMoney(int aMoney) { //функция установки денег
+		money = aMoney;
+	}
+	void setRandMoney()
+	{
+		srand(time(NULL));
+		money = rand() % 200 + 50; //генератор случайных чисел в диапазоне от 50 до 200 включительно
+								   //в переменную money (которая находится в protected класса Roulette(уже нет)) записываем значение генератора
+	}
+	int getMoney() { //функция возврата денег
+		return money;
+	}
+};
 
 class Roulette { //класс Roulette (главный класс, поидее)
 private:
@@ -13,8 +33,7 @@ private:
 	int number; //число
 	int res; //запись результата
 public:
-	Roulette() {
-	}; //конструктор
+	Roulette(); //конструктор
 	Roulette(int Rate, int Number) { // конструктор  с параметрами
 		setRate(Rate); // устанавливаем ставку
 		setNumber(Number); //устанавливаем число
@@ -35,64 +54,49 @@ public:
 		int i = rand() % 36; //диапазон генератора от 0 до 36 включительно
 		return i; //статическое значение 15 для проверки
 	}
-	void game() {
+	void game(Money *money) {
 		srand(time(NULL));
-		money = money - rate; //отнимаем от денег нашу ставку
+		money->setMoney((money->getMoney()) - rate); //отнимаем от денег нашу ставку
+
 		if (spin() == number) { //если генератор = нашему числу, то
 			res = rate*number; //ставка умножается на число и записывается в res
 		}
 		else {
 			res = 0; //если наоборот, то res = 0
 		}
-		money = money + res;  //к деньгам добавляется res
+		money->setMoney((money->getMoney()) + res);  //к деньгам добавляется res
 	}
-	void show() {
+	void show(Money money) {
 		cout << endl;
 		cout << "------------------" << endl;
-		cout << "Stavka:" << getRate() << " Chislo:" << getNumber() << endl; //выводит: ставка, число
-		cout << "Vipalo:" << spin() << endl; //выводит: генератор случайных чисел
-		cout << "Dengi:" << money << endl; //выводит: деньги
+		cout << "Ставка:" << getRate() << " Число:" << getNumber() << endl; //выводит: ставка, число
+		cout << "Выпало:" << spin() << endl; //выводит: генератор случайных чисел
+		cout << "Деньги:" << money.getMoney() << endl; //выводит: деньги
 		cout << "------------------" << endl;
 		cout << endl;
 		system("pause");
 	}
 };
 
-class Money { //класс Money для рандомизации денег в начале игры и их вывода
-public:
-	Money(); //конструктор
-	Money(int Money) { //конструктор с одним параметром (Зачем? Не знаю)
-		setMoney(Money); //устанавливаем деньги (Зачем ввожу число тоже не знаю)
-	}
-	void setMoney(int Money) { //функция установки денег
-		srand(time(NULL));
-		Money = rand() % 200 +50; //генератор случайных чисел в диапазоне от 50 до 200 включительно
-		money = Money; //в переменную money (которая находится в protected класса Roulette) записываем значение генератора
-	}
-	int getMoney() { //функция возврата денег
-		return money;
-	}
-};
-
-
 int main() {
+	setlocale(LC_ALL, "Russian");
 	Money mon(0); //вызов конструктора класса Money с параметром (Не важно какой, но если конструктор без параметра, то getMoney начинает не работать)
-	cout << "Vashi dengi: " << mon.getMoney() << endl;
 	int a, b; //переменные для ставки и числа
 	while (true) {
 		if (mon.getMoney() <= 0) { //если деньги меньше или равны 0 то
-			cout << "Igra zakonchena!\n" << endl; //прекратить игру
+			cout << "Игра закончена!\n" << endl; //прекратить игру
 			system("pause");
 			return 0; //не знаю как ещё выйти, break разве что, но тогда в конец программы опять return 0 нужен
 		}
 		else {
-			cout << "Vvedite stavku: " << endl;
+			cout << "Ваши деньги: " << mon.getMoney() << endl;
+			cout << "Введите ставку: " << endl;
 			cin >> a; //ввод ставки
-			cout << "Vvedite chislo: " << endl;
+			cout << "Введите число (0-36): " << endl;
 			cin >> b; //ввод числа
 			Roulette roul(a, b);//вызов конструктора класса Roulette с параметрами
-			roul.game(); //продолжить игру
-			roul.show(); //вывести значения на экран
+			roul.game(&mon); //продолжить игру
+			roul.show(mon); //вывести значения на экран
 			system("CLS");
 		}
 	}
